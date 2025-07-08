@@ -4,6 +4,8 @@
   <img src="image/trip_demo.png" width="50%">
 </p>
 
+> RL training is an energy‑intensive journey. Leveraging collected experience, RLEP rapidly converges on promising reasoning paths and achieves stronger final results.
+
 
 # Summary 
 *RLEP*—**R**einforcement **L**earning with **E**xperience re**P**lay—first collects verified successful trajectories and then replays them during subsequent training. At every update step, the policy is optimized on mini‑batches that blend newly generated rollouts with these replayed successes. By replaying high‑quality examples, RLEP steers the model away from fruitless exploration, focuses learning on promising reasoning paths, and delivers both faster convergence and stronger final performance.
