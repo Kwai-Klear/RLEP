@@ -24,5 +24,93 @@ Experimental results show that RLEP reaches the vanilla‑RL baseline’s best s
 </p>
 
 # Training
+The model is trained with **VERL**, using **vLLM** as the inference engine.
+## Install 
+```bash 
+git clone https://github.com/Kwai-Klear/RLEP.git
+cd rlep
+pip3 install -e .[vllm]
+```
 
-```Training code and ckpt coming soon!```
+## DAPO baseline 
+### 1.DAPO-nodyn-bs64
+Download the datasets and pretrained checkpoint
+```bash
+wget https://huggingface.co/datasets/Kwai-Klear/RLEP_dataset/resolve/main/dapo_format_aime2024_aime2025_amc2023.parquet # eval set
+wget https://huggingface.co/datasets/BytedTsinghua-SIA/DAPO-Math-17k/resolve/main/data/dapo-math-17k.parquet # trianing set
+git clone https://huggingface.co/Qwen/Qwen2.5-Math-7B
+```
+Update paths in `recipe/rlep/dapo_nodyn_bs_64.sh`
+```bash
+TRAIN_FILE=TheLocalPathTo/RLEP_dataset/dapo-math-17k.parquet
+TEST_FILE=TheLocalPathTo/RLEP_dataset/dapo_format_aime2024_aime2025_amc2023.parquet
+MODEL_PATH=TheLocalPathTo/Qwen2.5-Math-7B
+CKPTS_DIR=TheLocalPathTo/save/${project_name}/${exp_name}
+```
+Launch Ray workers (multi‑node training).
+The default expects 8 nodes—adjust as needed.
+See the VERL documentation: https://verl.readthedocs.io/en/latest/start/multinode.html for details.
+
+Start training
+```
+bash recipe/rlep/dapo_nodyn_bs_64.sh
+```
+
+### 2.DAPO official &&  DAPO-nodyn-bs32(optional)
+Please refer to `recipe/rlep/official_dapo.sh` & `recipe/rlep/rlep_training.sh`; the configuration pattern is identical.
+
+## Experience Collection
+Run inference with the model trained in DAPO‑nodyn‑bs64 (we used the checkpoint at 400 steps) and append the collected trajectories to the training set.
+```bash
+Inference code and dataprocess script tbd.
+```
+
+We also provide the final RLEP training set, `dapo-math-17k-with-experience-pool.parquet`. You can also launch RLEP training directly with this dataset.
+```bash
+git clone https://huggingface.co/datasets/Kwai-Klear/RLEP_dataset
+cd RLEP_dataset
+# concatenate the pieces in order
+cat dapo-math-17k-with-experience-pool.parquet.part-* \
+    > dapo-math-17k-with-experience-pool.parquet
+# the trianing dataet is RLEP_dataset/dapo-math-17k-with-experience-pool.parquet 
+```
+
+## RL with Experience Replay
+Set the paths for the `training set with experience pool`, `evaluation set`, `pretrained checkpoint`, and `output directory`.
+
+```bash
+TRAIN_FILE=TheLocalPathTo/RLEP_dataset/dapo-math-17k-with-experience-pool.parquet
+TEST_FILE=TheLocalPathTo/RLEP_dataset/dapo_format_aime2024_aime2025_amc2023.parquet
+MODEL_PATH=TheLocalPathTo/Qwen2.5-Math-7B
+CKPTS_DIR=TheLocalPathTo/save/${project_name}/${exp_name}
+```
+
+```bash 
+bash recipe/rlep/rlep_training.sh
+```
+
+We released our trained CKPT at https://huggingface.co/Kwai-Klear/qwen2.5-math-rlep
+
+## Evaluation
+`tbd`
+
+
+
+# Citation
+If you find our paper/blog or our code useful, we would appreciate it if you could cite our work:
+
+```
+@misc{zhang2025rlepreinforcementlearningexperience,
+      title={RLEP: Reinforcement Learning with Experience Replay for LLM Reasoning}, 
+      author={Hongzhi Zhang and Jia Fu and Jingyuan Zhang and Kai Fu and Qi Wang and Fuzheng Zhang and Guorui Zhou},
+      year={2025},
+      eprint={2507.07451},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2507.07451}, 
+}
+```
+
+# Acknowledgement 
+We conducted our experiments with the [VERL](https://github.com/volcengine/verl) framework and the [Qwen2.5‑7B‑Math](https://huggingface.co/Qwen/Qwen2.5-Math-7B) model, using the dataset and training scripts provided by [DAPO](https://dapo-sia.github.io/). 
+Many thanks to the open‑sourced works and the broader community for making these resources available!
