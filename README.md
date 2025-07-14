@@ -62,7 +62,7 @@ Please refer to `recipe/rlep/official_dapo.sh` & `recipe/rlep/rlep_training.sh`;
 ## Experience Collection
 Run inference with the model trained in DAPO‑nodyn‑bs64 (we used the checkpoint at 400 steps) and append the collected trajectories to the training set.
 ```bash
-Inference code and dataprocess script tbd.
+Inference code and data process script tbd.
 ```
 
 We also provide the final RLEP training set, `dapo-math-17k-with-experience-pool.parquet`. You can also launch RLEP training directly with this dataset.
@@ -89,15 +89,19 @@ CKPTS_DIR=TheLocalPathTo/save/${project_name}/${exp_name}
 bash recipe/rlep/rlep_training.sh
 ```
 
-We released our trained CKPT at https://huggingface.co/Kwai-Klear/qwen2.5-math-rlep
+We released our trained CKPT (at 320 steps) at https://huggingface.co/Kwai-Klear/qwen2.5-math-rlep
+
 
 ## Evaluation
-`tbd`
+
+```bash
+python inference/eval_main.py --model_path  xx
+```
 
 
 
 # Citation
-If you find our paper/blog or our code useful, we would appreciate it if you could cite our work:
+If you find our paper or code helpful, we would appreciate it if you could cite our work:
 
 ```
 @misc{zhang2025rlepreinforcementlearningexperience,
