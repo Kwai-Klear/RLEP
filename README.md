@@ -93,10 +93,15 @@ We released our trained CKPT (at 320 steps) at https://huggingface.co/Kwai-Klear
 
 
 ## Evaluation
-
 ```bash
 python inference/eval_main.py --model_path  xx
 ```
+We evaluated the converged RLEP model at 320 training steps and the DAPO‑nodyn‑bs64 baseline at 400 steps.
+
+|  | AIME-2024 | AIME-2025 | AMC-2023 |
+|------|-----------|---------|--------|
+| RLEP | 38.5      | 21.3      | 83.0   |
+| DAPO\-nodyn\-bs64 | 37.4  | 19.4        | 77.3   |
 
 
 
