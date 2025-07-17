@@ -1,4 +1,4 @@
-# RLEP: Reinforcement Learning with Experience Replay for LLM Reasoning
+# [RLEP: Reinforcement Learning with Experience Replay for LLM Reasoning](https://arxiv.org/abs/2507.07451)
 
 <p align="center">
   <img src="image/trip_demo.png" width="50%">
